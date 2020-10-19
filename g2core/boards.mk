@@ -160,6 +160,12 @@ ifeq ("$(CONFIG)","EggBot")
     SETTINGS_FILE="settings_eggbot.h"
 endif
 
+ifeq ("$(CONFIG)","workbee")
+    ifeq ("$(BOARD)","NONE")
+        BOARD=custom
+    endif
+    SETTINGS_FILE="settings_workbee1015.h"
+endif
 
 include $(wildcard ./board/$(STAR).mk)
 
