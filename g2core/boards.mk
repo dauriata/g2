@@ -277,6 +277,13 @@ ifeq ("$(CONFIG)","fourcable")
     endif
     SETTINGS_FILE="settings_fourcable.h"
 endif
+ifeq ("$(CONFIG)","workbee")
+    ifeq ("$(BOARD)","NONE")
+        BOARD=custom
+    endif
+    SETTINGS_FILE="settings_workbee1015.h"
+endif
+
 
 include $(wildcard ./board/$(STAR).mk)
 
