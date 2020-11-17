@@ -2,6 +2,12 @@
  * settings_workbee1015.h - Workbee 1015 CNC
  */
 
+/* FLASH INSTRUCTIONS
+* make CONFIG=workbee
+* stty -F /dev/ttyACM0 1200 hup
+* bossac --port=ttyACM0 -u=true -e -w -v -i -b -R bin/workbee-custom/g2core.bin
+*/
+
 /***********************************************************************/
 /**** Workbee 1000 x 1500 profile ******************************************/
 /***********************************************************************/
@@ -54,13 +60,13 @@
 // Gcode startup defaults
 #define GCODE_DEFAULT_UNITS         MILLIMETERS             // MILLIMETERS or INCHES
 #define GCODE_DEFAULT_PLANE         CANON_PLANE_XY          // CANON_PLANE_XY, CANON_PLANE_XZ, or CANON_PLANE_YZ
-#define GCODE_DEFAULT_COORD_SYSTEM  G54                     // G54, G55, G56, G57, G58 or G59
+#define GCODE_DEFAULT_COORD_SYSTEM  G55                     // G54, G55, G56, G57, G58 or G59
 #define GCODE_DEFAULT_PATH_CONTROL  PATH_CONTINUOUS
 #define GCODE_DEFAULT_DISTANCE_MODE ABSOLUTE_DISTANCE_MODE
 
 // *** motor settings ************************************************************************************
 
-#define MOTOR_POWER_MODE            MOTOR_POWERED_IN_CYCLE  // default motor power mode (see cmMotorPowerMode in stepper.h)
+#define MOTOR_POWER_MODE            MOTOR_POWERED_IN_CYCLE  // default motor power mode (see cmMotorPowerMode in stepper.h) // MOTOR_ALWAYS_POWERED,MOTOR_POWERED_IN_CYCLE,MOTOR_POWERED_ONLY_WHEN_MOVING
 #define MOTOR_POWER_TIMEOUT         2.00                    // motor power timeout in seconds
 
 #define M1_MOTOR_MAP                AXIS_X                  // 1ma
@@ -102,13 +108,14 @@
 // *** axis settings **********************************************************************************
 
 #define JERK_MAX                    500                     // mm/min^3 * 1,000,000
-#define JERK_HOMING                 2000                    // mm/min^3 * 1,000,000
+#define JERK_HOMING                 5000                    // mm/min^3 * 1,000,000
 #define VELOCITY_MAX                3000                    // mm/min
-#define SEARCH_VELOCITY 			1000
+#define FEEDRATE_MAX                3000
+#define SEARCH_VELOCITY 			1500
 
 #define X_AXIS_MODE                 AXIS_STANDARD           // xam  see canonical_machine.h cmAxisMode for valid values
 #define X_VELOCITY_MAX              VELOCITY_MAX            // xvm  G0 max velocity in mm/min
-#define X_FEEDRATE_MAX              X_VELOCITY_MAX          // xfr  G1 max feed rate in mm/min
+#define X_FEEDRATE_MAX              FEEDRATE_MAX            // xfr  G1 max feed rate in mm/min
 #define X_TRAVEL_MIN                0                       // xtn  minimum travel for soft limits
 #define X_TRAVEL_MAX                820                     // xtm  travel between switches or crashes
 #define X_JERK_MAX                  JERK_MAX                // xjm  jerk * 1,000,000  mm/min^3
@@ -118,13 +125,13 @@
 #define X_SEARCH_VELOCITY           SEARCH_VELOCITY         // xsv  minus means move to minimum switch
 #define X_LATCH_VELOCITY            100                     // xlv  mm/min
 #define X_LATCH_BACKOFF             5                       // xlb  mm
-#define X_ZERO_BACKOFF              3                       // xzb  mm
+#define X_ZERO_BACKOFF              2                       // xzb  mm
 
 #define Y_AXIS_MODE                 AXIS_STANDARD
 #define Y_VELOCITY_MAX              VELOCITY_MAX
-#define Y_FEEDRATE_MAX              Y_VELOCITY_MAX
+#define Y_FEEDRATE_MAX              FEEDRATE_MAX
 #define Y_TRAVEL_MIN                0
-#define Y_TRAVEL_MAX                1230
+#define Y_TRAVEL_MAX                1460-200 -5*2 -20 -10 // max-gantry size - boltx2 - overhang - switch/tool margin
 #define Y_JERK_MAX                  JERK_MAX
 #define Y_JERK_HIGH_SPEED           JERK_HOMING
 #define Y_HOMING_INPUT              3
@@ -132,7 +139,7 @@
 #define Y_SEARCH_VELOCITY           SEARCH_VELOCITY
 #define Y_LATCH_VELOCITY            100
 #define Y_LATCH_BACKOFF             5
-#define Y_ZERO_BACKOFF              3
+#define Y_ZERO_BACKOFF              2
 
 #define Z_AXIS_MODE                 AXIS_STANDARD
 #define Z_VELOCITY_MAX              1500
@@ -140,13 +147,13 @@
 #define Z_TRAVEL_MAX                0
 #define Z_TRAVEL_MIN                -146
 #define Z_JERK_MAX                  500
-#define Z_JERK_HIGH_SPEED           JERK_HOMING
+#define Z_JERK_HIGH_SPEED           JERK_HOMING/2
 #define Z_HOMING_INPUT              5
 #define Z_HOMING_DIRECTION          1
-#define Z_SEARCH_VELOCITY           SEARCH_VELOCITY
+#define Z_SEARCH_VELOCITY           SEARCH_VELOCITY/2
 #define Z_LATCH_VELOCITY            100
 #define Z_LATCH_BACKOFF             5
-#define Z_ZERO_BACKOFF              3
+#define Z_ZERO_BACKOFF              2
 
 //*** Input / output settings ***
 /*
@@ -211,3 +218,7 @@
 #define DI8_ACTION                  INPUT_ACTION_FAST_STOP
 #define DI8_FUNCTION                INPUT_FUNCTION_NONE
 
+// ** COORDINATE OFFSETS **
+
+#define G55_X_OFFSET (X_TRAVEL_MAX)/2
+#define G55_Y_OFFSET (Y_TRAVEL_MAX)/2
